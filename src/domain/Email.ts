@@ -1,14 +1,10 @@
-import { z } from 'zod';
 import ValueObject from './ValueObject';
 import Result from './Result';
+import { EmailSchema } from './EmailValidation';
 
 type EmailData = {
   email: string;
 };
-
-const EmailSchema = z.object({
-  email: z.string().email('This is not a valid email.'),
-});
 
 export default class Email extends ValueObject<EmailData> {
   private constructor(props: EmailData) {
