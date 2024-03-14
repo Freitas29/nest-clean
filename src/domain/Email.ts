@@ -6,17 +6,21 @@ type EmailData = {
   email: string;
 };
 
+const EmailSchema = z.object({
+  email: z.string().email('This is not a valid email.'),
+});
+
 export default class Email extends ValueObject<EmailData> {
   private constructor(props: EmailData) {
     super(props);
   }
 
   static isValidEmail(email: string): boolean {
-    return z.string().email().safeParse(email).success;
+    return EmailSchema.safeParse({ email }).success;
   }
 
   static create(email: string): Result<Email> {
-    if (!this.isValidEmail(email)) Result.fail('Email inválido');
+    if (!this.isValidEmail(email)) return Result.fail('E-mail inválido');
 
     return Result.ok(
       new Email({

@@ -16,10 +16,10 @@ export default class User extends Entity<UserData> {
   static create(props: { email: string; cpf: string; nome: string }) {
     const email = Email.create(props.email);
 
-    // const hasError = Result.combine([email]);
-
     if (email.isFailure) return Result.fail(email.error);
 
-    return Result.ok(new User({ email: email.getValue(), cpf: '', nome: '' }));
+    return Result.ok(
+      new User({ email: email.getValue(), cpf: props.cpf, nome: props.nome }),
+    );
   }
 }

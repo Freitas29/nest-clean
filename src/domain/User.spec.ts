@@ -12,7 +12,7 @@ describe('User', () => {
     expect(user.isSuccess).toBeTruthy();
   });
 
-  it('Deve criar um usuário com erro no email', () => {
+  it('Não deve criar um usuário com erro no email', () => {
     const user = User.create({
       cpf: '2323',
       email: 'temail.com',
@@ -20,10 +20,6 @@ describe('User', () => {
     });
 
     expect(user.isSuccess).toBeFalsy();
-    expect(user.error).toBe('Erro ao cri email');
+    expect(user.error).toBe('E-mail inválido');
   });
-
-  // it("Deve gerar um erro quando o email do usuário é inválido", () => {
-
-  // })
 });
