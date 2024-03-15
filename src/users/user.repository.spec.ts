@@ -3,10 +3,18 @@ import { UserRepository } from './user.repository';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import User from './User';
 import Email from './Email';
+import { faker } from '@faker-js/faker';
 
 describe('user.repository', () => {
   let userRepository: UserRepository;
   const saveUserMock = jest.fn();
+
+  const createFakeUser = () => ({
+    cpf: '',
+    email: Email.create(faker.internet.email()).getValue(),
+    nome: faker.internet.userName(),
+    id: '',
+  });
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
@@ -27,14 +35,7 @@ describe('user.repository', () => {
   });
 
   it('Deve criar um usuário', async () => {
-    const email = Email.create('teste@email.com');
-
-    const result = userRepository.create({
-      cpf: '',
-      email: email.getValue(),
-      nome: '',
-      id: '',
-    });
+    const result = userRepository.create(createFakeUser());
 
     await expect(Promise.resolve(result)).resolves.toEqual({
       error: null,
@@ -44,16 +45,9 @@ describe('user.repository', () => {
   });
 
   it('Deve retornar um erro ao tentar salvar o usuário', async () => {
-    const email = Email.create('fds@email.com');
-
     saveUserMock.mockRejectedValue(new Error('create'));
 
-    const result = userRepository.create({
-      cpf: '',
-      email: email.getValue(),
-      nome: '',
-      id: '',
-    });
+    const result = userRepository.create(createFakeUser());
 
     await expect(Promise.resolve(result)).resolves.toEqual({
       error: 'Não foi possível cadastrar o usuário',
