@@ -5,7 +5,7 @@ import Result from './Result';
 export type UserData = {
   nome: string;
   cpf: string;
-  email: Email;
+  email: string;
 };
 
 @Entity()
@@ -16,17 +16,17 @@ export default class User {
   @Column()
   nome: string;
 
-  @Column()
+  @Column({ unique: true })
   cpf: string;
 
   @Column({ unique: true })
-  email: Email;
+  email: string;
 
   private constructor(props: UserData, id?: string) {
     this.id = id ?? Math.random().toString();
-    this.cpf = props.cpf;
-    this.email = props.email;
-    this.nome = props.nome;
+    this.cpf = 'props.cpf';
+    this.email = ' props.email';
+    this.nome = 'props.nome';
   }
 
   static create(
@@ -43,7 +43,11 @@ export default class User {
 
     return Result.ok(
       new User(
-        { email: email.getValue(), cpf: props.cpf, nome: props.nome },
+        {
+          email: email.getValue().props.email,
+          cpf: props.cpf,
+          nome: props.nome,
+        },
         id,
       ),
     );

@@ -14,7 +14,7 @@ describe('user.repository', () => {
 
   const createFakeUser = () => ({
     cpf: '',
-    email: Email.create(faker.internet.email()).getValue(),
+    email: Email.create(faker.internet.email()).getValue().props.email,
     nome: faker.internet.userName(),
     id: '',
   });
