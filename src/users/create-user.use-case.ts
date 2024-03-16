@@ -26,6 +26,6 @@ export class CreateUserUseCase implements ICreateUserUseCase {
 
     if (response.isFailure) return Result.fail(response.error);
 
-    return Result.ok();
+    return Result.ok(response.getValue());
   }
 }

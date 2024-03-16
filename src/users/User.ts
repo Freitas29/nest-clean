@@ -19,12 +19,14 @@ export default class User {
   @Column()
   cpf: string;
 
-  @Column()
+  @Column({ unique: true })
   email: Email;
 
   private constructor(props: UserData, id?: string) {
     this.id = id ?? Math.random().toString();
-    Object.apply(this, props);
+    this.cpf = props.cpf;
+    this.email = props.email;
+    this.nome = props.nome;
   }
 
   static create(
