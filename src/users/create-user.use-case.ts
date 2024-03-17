@@ -1,6 +1,6 @@
 import { CreateUserDTO } from './CreateUserDTO';
 import Result from './Result';
-import User from './User';
+import { User } from './User';
 import { IUserRepository } from './UserRepository';
 import { Inject, Injectable } from '@nestjs/common';
 

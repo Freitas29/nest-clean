@@ -1,5 +1,5 @@
 import Result from 'src/users/Result';
-import User from 'src/users/User';
+import { User } from 'src/users/User';
 
 export interface IUserRepository {
   create(input: User): Promise<Result<User>>;

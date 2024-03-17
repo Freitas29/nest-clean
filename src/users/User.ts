@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, ObjectIdColumn } from 'typeorm';
 import Email from './Email';
 import Result from './Result';
 
@@ -9,34 +9,25 @@ export type UserData = {
 };
 
 @Entity()
-export default class User {
-  @PrimaryColumn()
+export class User {
+  @ObjectIdColumn()
   id: string; //uuid
 
-  @Column()
+  @Column({ type: 'text', nullable: false })
   nome: string;
 
-  @Column({ unique: true })
+  @Column({ unique: true, type: 'text', nullable: false })
   cpf: string;
 
-  @Column({ unique: true })
+  @Column({ unique: true, type: 'text', nullable: false })
   email: string;
 
-  private constructor(props: UserData, id?: string) {
+  constructor(props: UserData, id?: string) {
+    Object.assign(this, props);
     this.id = id ?? Math.random().toString();
-    this.cpf = 'props.cpf';
-    this.email = ' props.email';
-    this.nome = 'props.nome';
   }
 
-  static create(
-    props: {
-      email: string;
-      cpf: string;
-      nome: string;
-    },
-    id?: string,
-  ): Result<User> {
+  static create(props: UserData, id?: string): Result<User> {
     const email = Email.create(props.email);
 
     if (email.isFailure) return Result.fail(email.error);

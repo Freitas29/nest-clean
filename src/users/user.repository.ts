@@ -2,8 +2,8 @@ import { IUserRepository } from './UserRepository';
 import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import User from './User';
 import Result from './Result';
+import { User } from './User';
 
 @Injectable()
 export class UserRepository implements IUserRepository {
@@ -18,6 +18,7 @@ export class UserRepository implements IUserRepository {
 
       return Result.ok(user);
     } catch (e) {
+      console.log(e);
       return Result.fail('Não foi possível cadastrar o usuário');
     }
   }
