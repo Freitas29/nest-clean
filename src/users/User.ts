@@ -1,7 +1,10 @@
 import { Column, Entity, ObjectIdColumn } from 'typeorm';
 import Email from './Email';
 import Result from './Result';
-
+import { CNPJDocumentHandler } from './document/CNPJDocumentHandler';
+import { CPFDocumentHandler } from './document/CPFDocumentHandler';
+import { CNPJValidator } from '../common/validators/cnpj-validator';
+import { CPFValidator } from '../common/validators/cpf-validator';
 export type UserData = {
   nome: string;
   document: string;
@@ -13,6 +16,10 @@ export enum UserType {
   Comum = 'comum',
   Lojista = 'lojista',
 }
+
+const CNPJ_VALIDATOR = new CNPJValidator();
+
+const CPF_VALIDATOR = new CPFValidator();
 
 @Entity()
 export class User {
@@ -52,5 +59,17 @@ export class User {
         id,
       ),
     );
+  }
+
+  isValidDocument(): boolean {
+    const cnpjHandler = new CNPJDocumentHandler(CNPJ_VALIDATOR);
+    const cpfHandler = new CPFDocumentHandler(CPF_VALIDATOR);
+    cnpjHandler.setNext(cpfHandler);
+
+    const result = cnpjHandler.handler(this.userType, this.document);
+
+    if (result.isFailure) return false;
+
+    return result.getValue();
   }
 }
