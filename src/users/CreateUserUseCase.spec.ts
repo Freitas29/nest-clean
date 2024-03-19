@@ -36,7 +36,7 @@ describe('CreateUserUseCase', () => {
 
   it('Deve criar um usuário com sucesso', async () => {
     const response = createUserUseCase.create({
-      cpf: '',
+      document: '',
       email: faker.internet.email(),
       name: faker.internet.userName(),
       password: faker.internet.password(),
@@ -51,7 +51,7 @@ describe('CreateUserUseCase', () => {
 
   it('Não deve criar um usuário com e-mail inválido', async () => {
     const response = createUserUseCase.create({
-      cpf: '',
+      document: '',
       email: 'jfkldsjfkl',
       name: faker.internet.userName(),
       password: faker.internet.password(),

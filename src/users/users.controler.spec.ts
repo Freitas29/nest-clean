@@ -47,7 +47,7 @@ describe('UsersController', () => {
     });
 
     await controller.create(
-      { cpf: '', email: '', name: '', password: '' },
+      { document: '', email: '', name: '', password: '' },
       res,
     );
 
@@ -60,14 +60,14 @@ describe('UsersController', () => {
     const sendMock = jest.fn();
 
     const userDTO = {
-      cpf: '',
+      document: '',
       email: faker.internet.email(),
       name: faker.internet.userName(),
       password: faker.internet.password(),
     };
 
     const expectedUser = User.create({
-      cpf: userDTO.cpf,
+      document: userDTO.document,
       email: userDTO.email,
       nome: userDTO.name,
     }).getValue();

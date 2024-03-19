@@ -4,7 +4,7 @@ import Result from './Result';
 
 export type UserData = {
   nome: string;
-  cpf: string;
+  document: string;
   email: string;
 };
 
@@ -17,7 +17,7 @@ export class User {
   nome: string;
 
   @Column({ unique: true, type: 'text', nullable: false })
-  cpf: string;
+  document: string;
 
   @Column({ unique: true, type: 'text', nullable: false })
   email: string;
@@ -36,7 +36,7 @@ export class User {
       new User(
         {
           email: email.getValue().props.email,
-          cpf: props.cpf,
+          document: props.document,
           nome: props.nome,
         },
         id,

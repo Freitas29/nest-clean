@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { UserRepository } from './user.repository';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import User from './User';
+import { User } from './User';
 import Email from './Email';
 import { faker } from '@faker-js/faker';
 import { Repository } from 'typeorm';
@@ -13,7 +13,7 @@ describe('user.repository', () => {
   let userRepositoryInstance: Repository<User>;
 
   const createFakeUser = () => ({
-    cpf: '',
+    document: '',
     email: Email.create(faker.internet.email()).getValue().props.email,
     nome: faker.internet.userName(),
     id: '',
@@ -72,7 +72,7 @@ describe('user.repository', () => {
 
   it('Não deve criar dois usuário com o mesmo email', async () => {
     const user = User.create({
-      cpf: '2323',
+      document: '2323',
       email: faker.internet.email(),
       nome: '1212',
     });

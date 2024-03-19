@@ -15,7 +15,7 @@ export class CreateUserUseCase implements ICreateUserUseCase {
 
   async create(input: CreateUserDTO): Promise<Result<User>> {
     const user = User.create({
-      cpf: input.cpf,
+      document: input.document,
       email: input.email,
       nome: input.name,
     });
