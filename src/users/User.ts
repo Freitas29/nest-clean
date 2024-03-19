@@ -61,15 +61,15 @@ export class User {
     );
   }
 
-  isValidDocument(): boolean {
+  isValidDocument(): Result<boolean> {
     const cnpjHandler = new CNPJDocumentHandler(CNPJ_VALIDATOR);
     const cpfHandler = new CPFDocumentHandler(CPF_VALIDATOR);
     cnpjHandler.setNext(cpfHandler);
 
     const result = cnpjHandler.handler(this.userType, this.document);
 
-    if (result.isFailure) return false;
+    if (result.isFailure) return Result.fail(result.error);
 
-    return result.getValue();
+    return Result.ok(result.getValue());
   }
 }

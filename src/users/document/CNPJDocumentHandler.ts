@@ -10,8 +10,13 @@ export class CNPJDocumentHandler extends AbstractDocumentHandler {
   }
 
   handler(user: UserType, document: string): Result<boolean> {
-    if (user === UserType.Lojista)
-      return Result.ok(this.validator.isValid(document));
+    if (user === UserType.Lojista) {
+      const isValid = this.validator.isValid(document);
+
+      if (isValid) return Result.ok(true);
+
+      return Result.fail('CNPJ inválido');
+    }
 
     return super.handler(user, document);
   }

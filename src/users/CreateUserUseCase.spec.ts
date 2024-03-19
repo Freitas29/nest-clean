@@ -9,6 +9,8 @@ jest.mock('./user.repository');
 
 describe('CreateUserUseCase', () => {
   let createUserUseCase: CreateUserUseCase;
+  const CNPJ_VALIDO = '80006940000127';
+  const CPF_VALIDO = '23671568089';
 
   const mockedUserRepository: IUserRepository = {
     async create() {
@@ -37,7 +39,7 @@ describe('CreateUserUseCase', () => {
 
   it('Deve criar um usuário com sucesso', async () => {
     const response = createUserUseCase.create({
-      document: '',
+      document: CPF_VALIDO,
       email: faker.internet.email(),
       name: faker.internet.userName(),
       password: faker.internet.password(),
@@ -67,7 +69,7 @@ describe('CreateUserUseCase', () => {
     });
   });
 
-  it.only('Deve retornar o erro de CPF inválido para o tipo de usuário comum ao passar vázio', async () => {
+  it('Deve retornar o erro de CPF inválido para o tipo de usuário comum ao passar vázio', async () => {
     const response = createUserUseCase.create({
       document: '',
       email: faker.internet.email(),
@@ -76,7 +78,39 @@ describe('CreateUserUseCase', () => {
       userType: UserType.Comum,
     });
 
-    await expect(Promise.resolve(response)).rejects.toEqual({
+    await expect(Promise.resolve(response)).resolves.toMatchObject({
+      isFailure: true,
+      isSuccess: false,
+      error: 'CPF inválido',
+    });
+  });
+
+  it('Deve retornar o erro de CNPJ inválido para o tipo de usuário lojista ao passar vázio', async () => {
+    const response = createUserUseCase.create({
+      document: CPF_VALIDO,
+      email: faker.internet.email(),
+      name: faker.internet.userName(),
+      password: faker.internet.password(),
+      userType: UserType.Lojista,
+    });
+
+    await expect(Promise.resolve(response)).resolves.toMatchObject({
+      isFailure: true,
+      isSuccess: false,
+      error: 'CNPJ inválido',
+    });
+  });
+
+  it('Deve retornar o erro de CPF inválido para o tipo de usuário comum ao passar vázio', async () => {
+    const response = createUserUseCase.create({
+      document: CNPJ_VALIDO,
+      email: faker.internet.email(),
+      name: faker.internet.userName(),
+      password: faker.internet.password(),
+      userType: UserType.Comum,
+    });
+
+    await expect(Promise.resolve(response)).resolves.toMatchObject({
       isFailure: true,
       isSuccess: false,
       error: 'CPF inválido',

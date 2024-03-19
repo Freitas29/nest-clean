@@ -9,8 +9,13 @@ export class CPFDocumentHandler extends AbstractDocumentHandler {
   }
 
   handler(user: UserType, document: string): Result<boolean> {
-    if (user === UserType.Comum)
-      return Result.ok(this.validator.isValid(document));
+    if (user === UserType.Comum) {
+      const isValid = this.validator.isValid(document);
+
+      if (isValid) return Result.ok(true);
+
+      return Result.fail('CPF inválido');
+    }
 
     return super.handler(user, document);
   }

@@ -18,7 +18,6 @@ export class UserRepository implements IUserRepository {
 
       return Result.ok(user);
     } catch (e) {
-      console.log(e);
       return Result.fail('Não foi possível cadastrar o usuário');
     }
   }

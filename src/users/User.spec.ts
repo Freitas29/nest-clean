@@ -55,7 +55,7 @@ describe('User', () => {
       userType: UserType.Lojista,
     }).getValue();
 
-    expect(user.isValidDocument()).toBeTruthy();
+    expect(user.isValidDocument().getValue()).toBeTruthy();
   });
 
   it('Deve retornar true para o comum com CPF válido', () => {
@@ -66,7 +66,7 @@ describe('User', () => {
       userType: UserType.Comum,
     }).getValue();
 
-    expect(user.isValidDocument()).toBeTruthy();
+    expect(user.isValidDocument().getValue()).toBeTruthy();
   });
 
   it('Deve retornar false para o comum com CNPJ válido', () => {
@@ -77,7 +77,7 @@ describe('User', () => {
       userType: UserType.Comum,
     }).getValue();
 
-    expect(user.isValidDocument()).toBeFalsy();
+    expect(user.isValidDocument().getValue()).toBeFalsy();
   });
 
   it('Deve retornar false para o Lojista com CPF válido', () => {
@@ -88,6 +88,6 @@ describe('User', () => {
       userType: UserType.Lojista,
     }).getValue();
 
-    expect(user.isValidDocument()).toBeFalsy();
+    expect(user.isValidDocument().getValue()).toBeFalsy();
   });
 });

@@ -23,6 +23,12 @@ export class CreateUserUseCase implements ICreateUserUseCase {
 
     if (user.isFailure) return Result.fail(user.error);
 
+    const isDocumentValid = user.getValue().isValidDocument();
+
+    if (isDocumentValid.isFailure) return Result.fail(isDocumentValid.error);
+
+    if (!isDocumentValid.getValue()) return Result.fail(isDocumentValid.error);
+
     const response = await this.userRepo.create(user.getValue());
 
     if (response.isFailure) return Result.fail(response.error);

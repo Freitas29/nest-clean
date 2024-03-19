@@ -4,8 +4,9 @@ import { CreateUserUseCase } from './create-user.use-case';
 import { Response } from 'express';
 import { HttpStatus } from '@nestjs/common';
 import { faker } from '@faker-js/faker';
-import { User } from './User';
+import { UserType } from './User';
 import { createFakeUser } from './mocks/UserMock';
+import { CreateUserDTO } from './CreateUserDTO';
 // import { SqlInMemory } from 'typeorm/driver/SqlInMemory';
 
 describe('UsersController', () => {
@@ -48,7 +49,13 @@ describe('UsersController', () => {
     });
 
     await controller.create(
-      { document: '', email: '', name: '', password: '' },
+      {
+        document: '',
+        email: '',
+        name: '',
+        password: '',
+        userType: UserType.Comum,
+      },
       res,
     );
 
@@ -60,7 +67,8 @@ describe('UsersController', () => {
     const statusMock = jest.fn().mockReturnThis();
     const sendMock = jest.fn();
 
-    const userDTO = {
+    const userDTO: CreateUserDTO = {
+      userType: UserType.Comum,
       document: '',
       email: faker.internet.email(),
       name: faker.internet.userName(),
