@@ -1,4 +1,5 @@
-import { IsEmail, IsNotEmpty } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsEnum } from 'class-validator';
+import { UserType } from './User';
 
 export class CreateUserDTO {
   name: string;
@@ -10,4 +11,9 @@ export class CreateUserDTO {
 
   @IsNotEmpty()
   password: string;
+
+  @IsEnum(UserType, {
+    message: 'Tipo de usuário inválido',
+  })
+  userType: UserType;
 }

@@ -3,6 +3,7 @@ import { CreateUserUseCase } from './create-user.use-case';
 import { faker } from '@faker-js/faker';
 import { IUserRepository } from './UserRepository';
 import Result from './Result';
+import { UserType } from './User';
 
 jest.mock('./user.repository');
 
@@ -40,6 +41,7 @@ describe('CreateUserUseCase', () => {
       email: faker.internet.email(),
       name: faker.internet.userName(),
       password: faker.internet.password(),
+      userType: UserType.Comum,
     });
 
     await expect(Promise.resolve(response)).resolves.toEqual({
@@ -55,12 +57,29 @@ describe('CreateUserUseCase', () => {
       email: 'jfkldsjfkl',
       name: faker.internet.userName(),
       password: faker.internet.password(),
+      userType: UserType.Comum,
     });
 
     await expect(Promise.resolve(response)).resolves.toEqual({
       isFailure: true,
       isSuccess: false,
       error: 'E-mail inválido',
+    });
+  });
+
+  it.only('Deve retornar o erro de CPF inválido para o tipo de usuário comum ao passar vázio', async () => {
+    const response = createUserUseCase.create({
+      document: '',
+      email: faker.internet.email(),
+      name: faker.internet.userName(),
+      password: faker.internet.password(),
+      userType: UserType.Comum,
+    });
+
+    await expect(Promise.resolve(response)).rejects.toEqual({
+      isFailure: true,
+      isSuccess: false,
+      error: 'CPF inválido',
     });
   });
 });

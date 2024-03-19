@@ -6,7 +6,13 @@ export type UserData = {
   nome: string;
   document: string;
   email: string;
+  userType: UserType;
 };
+
+export enum UserType {
+  Comum = 'comum',
+  Lojista = 'lojista',
+}
 
 @Entity()
 export class User {
@@ -21,6 +27,9 @@ export class User {
 
   @Column({ unique: true, type: 'text', nullable: false })
   email: string;
+
+  @Column({ enum: UserType })
+  userType: UserType;
 
   constructor(props: UserData, id?: string) {
     Object.assign(this, props);
@@ -38,6 +47,7 @@ export class User {
           email: email.getValue().props.email,
           document: props.document,
           nome: props.nome,
+          userType: props.userType,
         },
         id,
       ),

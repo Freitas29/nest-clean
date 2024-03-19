@@ -18,6 +18,7 @@ export class CreateUserUseCase implements ICreateUserUseCase {
       document: input.document,
       email: input.email,
       nome: input.name,
+      userType: input.userType,
     });
 
     if (user.isFailure) return Result.fail(user.error);

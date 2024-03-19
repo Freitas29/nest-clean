@@ -5,6 +5,7 @@ import { Response } from 'express';
 import { HttpStatus } from '@nestjs/common';
 import { faker } from '@faker-js/faker';
 import { User } from './User';
+import { createFakeUser } from './mocks/UserMock';
 // import { SqlInMemory } from 'typeorm/driver/SqlInMemory';
 
 describe('UsersController', () => {
@@ -66,11 +67,7 @@ describe('UsersController', () => {
       password: faker.internet.password(),
     };
 
-    const expectedUser = User.create({
-      document: userDTO.document,
-      email: userDTO.email,
-      nome: userDTO.name,
-    }).getValue();
+    const expectedUser = createFakeUser().getValue();
 
     createMock.mockReturnValueOnce({
       isFailure: false,
