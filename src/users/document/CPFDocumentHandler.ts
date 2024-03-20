@@ -1,7 +1,7 @@
 import { IValidator } from 'src/common/validators/Validator';
 import { UserType } from '../User';
 import { AbstractDocumentHandler } from './AbstractDocumentHandler';
-import Result from '../Result';
+import Result from '../../common/Result';
 
 export class CPFDocumentHandler extends AbstractDocumentHandler {
   constructor(private readonly validator: IValidator) {

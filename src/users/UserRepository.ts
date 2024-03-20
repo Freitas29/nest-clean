@@ -1,4 +1,4 @@
-import Result from 'src/users/Result';
+import Result from 'src';
 import { User } from 'src/users/User';
 
 export interface IUserRepository {

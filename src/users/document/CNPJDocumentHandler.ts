@@ -1,5 +1,5 @@
 import { UserType } from '../User';
-import Result from '../Result';
+import Result from '../../common/Result';
 
 import { AbstractDocumentHandler } from './AbstractDocumentHandler';
 import { IValidator } from '../../common/validators/Validator';

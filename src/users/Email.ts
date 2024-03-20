@@ -1,5 +1,5 @@
 import ValueObject from './ValueObject';
-import Result from './Result';
+import Result from '../common/Result';
 import { EmailSchema } from './EmailValidation';
 
 type EmailData = {

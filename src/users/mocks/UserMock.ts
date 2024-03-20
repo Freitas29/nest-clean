@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { User, UserData, UserType } from '../User';
 import { Factory } from 'fishery';
-import Result from '../Result';
+import Result from '../../common/Result';
 
 export const createFakeUser = Factory.define<UserData, any, Result<User>>(
   ({ params, onCreate }) => {

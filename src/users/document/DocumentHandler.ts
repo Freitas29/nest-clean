@@ -1,4 +1,4 @@
-import Result from '../Result';
+import Result from '../../common/Result';
 import { UserType } from '../User';
 
 export interface IDocumentHandler {

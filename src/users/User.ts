@@ -1,6 +1,6 @@
 import { Column, Entity, ObjectIdColumn } from 'typeorm';
 import Email from './Email';
-import Result from './Result';
+import Result from '../common/Result';
 import { CNPJDocumentHandler } from './document/CNPJDocumentHandler';
 import { CPFDocumentHandler } from './document/CPFDocumentHandler';
 import { CNPJValidator } from '../common/validators/cnpj-validator';

@@ -1,4 +1,4 @@
-import Result from '../../users/Result';
+import Result from '../../common/Result';
 import { UserType } from '../User';
 import { IDocumentHandler } from './DocumentHandler';
 
