@@ -9,12 +9,12 @@ describe('Transfers', () => {
     });
     const sender = await createFakeUser.create({ userType: UserType.Comum });
 
-    const transfer = new Transfers({
+    const transfer = Transfers.execute({
       receiver: receiver.getValue(),
       sender: sender.getValue(),
     });
 
-    expect(transfer).toBeInstanceOf(Transfers);
+    expect(transfer.isSuccess).toBeTruthy();
   });
 
   it('Não deve cadastrar uma transferência válida quando é sender é um lojista', async () => {
@@ -23,12 +23,12 @@ describe('Transfers', () => {
     });
     const sender = await createFakeUser.create({ userType: UserType.Lojista });
 
-    const transfer = () =>
-      new Transfers({
-        receiver: receiver.getValue(),
-        sender: sender.getValue(),
-      });
+    const transfer = Transfers.execute({
+      receiver: receiver.getValue(),
+      sender: sender.getValue(),
+    });
 
-    expect(transfer).toThrow('Lojistas não podem realizar transferência');
+    expect(transfer.isSuccess).toBeFalsy();
+    expect(transfer.error).toBe('Lojistas não podem realizar transferência');
   });
 });

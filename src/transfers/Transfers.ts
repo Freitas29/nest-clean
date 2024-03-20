@@ -1,3 +1,4 @@
+import Result from '../users/Result';
 import { User, UserType } from '../users/User';
 
 type TransferData = {
@@ -10,10 +11,15 @@ export class Transfers {
   sender: User;
 
   constructor(props: TransferData) {
-    if (props.sender.userType === UserType.Lojista)
-      throw new Error('Lojistas não podem realizar transferência');
-
     this.receiver = props.receiver;
     this.sender = props.sender;
+  }
+
+  static execute(props: TransferData): Result<Transfers> {
+    if (props.sender.userType === UserType.Lojista) {
+      return Result.fail('Lojistas não podem realizar transferência');
+    }
+
+    return Result.ok(new Transfers(props));
   }
 }
