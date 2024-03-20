@@ -37,7 +37,8 @@ describe('user.repository', () => {
   });
 
   it('Deve criar um usuário', async () => {
-    const result = userRepository.create(createFakeUser().getValue());
+    const userCreated = await createFakeUser.create();
+    const result = userRepository.create(userCreated.getValue());
 
     await expect(Promise.resolve(result)).resolves.toMatchObject({
       error: null,
@@ -53,7 +54,8 @@ describe('user.repository', () => {
       .spyOn(userRepositoryInstance, 'save')
       .mockRejectedValueOnce('Error to create user');
 
-    const result = userRepository.create(createFakeUser().getValue());
+    const userCreated = await createFakeUser.create();
+    const result = userRepository.create(userCreated.getValue());
 
     await expect(Promise.resolve(result)).resolves.toMatchObject({
       error: 'Não foi possível cadastrar o usuário',
@@ -63,13 +65,13 @@ describe('user.repository', () => {
   });
 
   it('Não deve criar dois usuário com o mesmo email', async () => {
-    const user = createFakeUser();
+    const userCreated = await createFakeUser.create();
 
     jest
       .spyOn(userRepositoryInstance, 'save')
-      .mockResolvedValueOnce(user.getValue());
+      .mockResolvedValueOnce(userCreated.getValue());
 
-    const response = await userRepository.create(user.getValue());
+    const response = await userRepository.create(userCreated.getValue());
 
     expect(response).toBeTruthy();
 
@@ -77,7 +79,7 @@ describe('user.repository', () => {
       .spyOn(userRepositoryInstance, 'save')
       .mockRejectedValueOnce('Error to create user');
 
-    const otherUser = await userRepository.create(user.getValue());
+    const otherUser = await userRepository.create(userCreated.getValue());
 
     expect(otherUser.isSuccess).toBeFalsy();
   });

@@ -75,7 +75,7 @@ describe('UsersController', () => {
       password: faker.internet.password(),
     };
 
-    const expectedUser = createFakeUser().getValue();
+    const expectedUser = (await createFakeUser.create()).getValue();
 
     createMock.mockReturnValueOnce({
       isFailure: false,

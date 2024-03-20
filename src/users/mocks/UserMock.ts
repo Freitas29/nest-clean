@@ -1,10 +1,18 @@
 import { faker } from '@faker-js/faker';
-import { User, UserType } from '../User';
+import { User, UserData, UserType } from '../User';
+import { Factory } from 'fishery';
+import Result from '../Result';
 
-export const createFakeUser = () =>
-  User.create({
-    document: faker.helpers.replaceSymbols('###.###.###-##'),
-    email: faker.internet.email(),
-    nome: faker.internet.userName(),
-    userType: UserType.Comum,
-  });
+export const createFakeUser = Factory.define<UserData, any, Result<User>>(
+  ({ params, onCreate }) => {
+    onCreate((user) => User.create(user));
+
+    return {
+      document:
+        params.document || faker.helpers.replaceSymbols('###.###.###-##'),
+      email: params.email || faker.internet.email(),
+      nome: params.nome || faker.internet.userName(),
+      userType: params.userType || UserType.Comum,
+    };
+  },
+);

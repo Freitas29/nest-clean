@@ -7,10 +7,10 @@ describe('User', () => {
   const CNPJ_VALIDO = '55454336000116';
   const CPF_VALIDO = '616.772.970-00';
 
-  it('Deve criar um usuário com sucesso', () => {
-    const user = createFakeUser();
+  it('Deve criar um usuário com sucesso', async () => {
+    const userCreated = await createFakeUser.create();
 
-    expect(user.isSuccess).toBeTruthy();
+    expect(userCreated.isSuccess).toBeTruthy();
   });
 
   it('Não deve criar um usuário com erro no email', () => {
