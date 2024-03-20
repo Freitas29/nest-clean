@@ -38,7 +38,7 @@ describe('CNPJDocumentHandler', () => {
   it('Deve retornar false, sem erro,  para um CNPJ inválido com mascara para usuário comum', () => {
     const result = factory().handler(UserType.Lojista, '483924');
 
-    expect(result.isFailure).toBeFalsy();
-    expect(result.getValue()).toBeFalsy();
+    expect(result.isFailure).toBeTruthy();
+    expect(result.error).toBe('CNPJ inválido');
   });
 });

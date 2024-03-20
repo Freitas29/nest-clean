@@ -38,7 +38,7 @@ describe('CPFDocumentHandler', () => {
   it('Deve retornar false, sem erro,  para um cpf inválido com mascara para usuário comum', () => {
     const result = factory().handler(UserType.Comum, '483924');
 
-    expect(result.isFailure).toBeFalsy();
-    expect(result.getValue()).toBeFalsy();
+    expect(result.isFailure).toBeTruthy();
+    expect(result.error).toBe('CPF inválido');
   });
 });

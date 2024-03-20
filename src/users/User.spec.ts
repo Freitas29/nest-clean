@@ -77,7 +77,10 @@ describe('User', () => {
       userType: UserType.Comum,
     }).getValue();
 
-    expect(user.isValidDocument().getValue()).toBeFalsy();
+    const result = user.isValidDocument();
+
+    expect(result.isFailure).toBeTruthy();
+    expect(result.error).toBe('CPF inválido');
   });
 
   it('Deve retornar false para o Lojista com CPF válido', () => {
@@ -88,6 +91,9 @@ describe('User', () => {
       userType: UserType.Lojista,
     }).getValue();
 
-    expect(user.isValidDocument().getValue()).toBeFalsy();
+    const result = user.isValidDocument();
+
+    expect(result.isFailure).toBeTruthy();
+    expect(result.error).toBe('CNPJ inválido');
   });
 });
