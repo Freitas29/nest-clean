@@ -1,8 +1,8 @@
 import { Test } from '@nestjs/testing';
 import { UserRepository } from './user.repository';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { User } from './User';
-import { Repository } from 'typeorm';
+import { User, UserType } from './User';
+import { Repository, DataSource } from 'typeorm';
 import { IUserRepository } from './UserRepository';
 import { createFakeUser } from './mocks/UserMock';
 
@@ -82,5 +82,73 @@ describe('user.repository', () => {
     const otherUser = await userRepository.create(userCreated.getValue());
 
     expect(otherUser.isSuccess).toBeFalsy();
+  });
+});
+
+describe('user.repository with db', () => {
+  let connection: DataSource;
+
+  beforeAll(async () => {
+    try {
+      connection = await new DataSource({
+        type: 'better-sqlite3',
+        database: ':memory:',
+        entities: [User],
+        synchronize: true,
+      }).initialize();
+    } catch (e) {
+      console.error('fkdljasklfjdsklf', e);
+    }
+  });
+
+  afterEach(async () => {
+    connection.getRepository(User).clear();
+  });
+
+  afterAll(async () => {
+    await connection.destroy();
+  });
+
+  it('Deve impedir a inserção de um usuário com email duplicado', async () => {
+    const userRepository = connection.getRepository(User);
+
+    try {
+      const user = createFakeUser.build();
+      await userRepository.insert(user);
+      await userRepository.insert(user);
+
+      fail('Não deve ter dois emails cadastrados');
+    } catch (error) {
+      expect((error as Error).message).toContain(
+        'UNIQUE constraint failed: user.email',
+      );
+    }
+  });
+
+  it('Deve impedir a inserção de um usuário com cpf duplicado', async () => {
+    const userRepository = connection.getRepository(User);
+
+    try {
+      await userRepository.insert(
+        createFakeUser.build({ document: '12', userType: UserType.Comum }),
+      );
+      await userRepository.insert(
+        createFakeUser.build({ document: '12', userType: UserType.Comum }),
+      );
+
+      fail('Não deve ter dois emails cadastrados');
+    } catch (error) {
+      expect((error as Error).message).toContain(
+        'UNIQUE constraint failed: user.document',
+      );
+    }
+  });
+
+  it('Deve criar um usuário com sucesso', async () => {
+    const userRepository = connection.getRepository(User);
+
+    const result = await userRepository.insert(createFakeUser.build());
+
+    expect(result.identifiers).toHaveLength(1);
   });
 });

@@ -1,4 +1,4 @@
-import { Column, Entity, ObjectIdColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import Email from './Email';
 import Result from '../common/Result';
 import { CNPJDocumentHandler } from './document/CNPJDocumentHandler';
@@ -23,7 +23,7 @@ const CPF_VALIDATOR = new CPFValidator();
 
 @Entity()
 export class User {
-  @ObjectIdColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: string; //uuid
 
   @Column({ type: 'text', nullable: false })
