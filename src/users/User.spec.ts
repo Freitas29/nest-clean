@@ -96,4 +96,15 @@ describe('User', () => {
     expect(result.isFailure).toBeTruthy();
     expect(result.error).toBe('CNPJ inválido');
   });
+
+  it("Ao criar um usuário sem 'amount' deve iniciar como zero", () => {
+    const user = User.create({
+      document: CPF_VALIDO,
+      email: 'teste@email.com',
+      nome: '122',
+      userType: UserType.Comum,
+    });
+
+    expect(user.getValue().amount).toBe(0);
+  });
 });

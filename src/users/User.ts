@@ -10,6 +10,7 @@ export type UserData = {
   document: string;
   email: string;
   userType: UserType;
+  amount?: number;
 };
 
 export enum UserType {
@@ -38,6 +39,9 @@ export class User {
   @Column({ enum: UserType })
   userType: UserType;
 
+  @Column({ type: 'decimal', default: 0 })
+  amount: number;
+
   constructor(props: UserData, id?: string) {
     Object.assign(this, props);
     this.id = id ?? Math.random().toString();
@@ -55,6 +59,7 @@ export class User {
           document: props.document,
           nome: props.nome,
           userType: props.userType,
+          amount: props.amount || 0,
         },
         id,
       ),

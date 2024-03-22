@@ -13,6 +13,7 @@ export const createFakeUser = Factory.define<UserData, any, Result<User>>(
       email: params.email || faker.internet.email(),
       nome: params.nome || faker.internet.userName(),
       userType: params.userType || UserType.Comum,
+      amount: params.amount,
     };
   },
 );

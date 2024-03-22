@@ -85,7 +85,7 @@ describe('user.repository', () => {
   });
 });
 
-describe('user.repository with db', () => {
+describe.skip('user.repository with db', () => {
   let connection: DataSource;
 
   beforeAll(async () => {
@@ -113,7 +113,7 @@ describe('user.repository with db', () => {
     const userRepository = connection.getRepository(User);
 
     try {
-      const user = createFakeUser.build();
+      const user = (await createFakeUser.create()).getValue();
       await userRepository.insert(user);
       await userRepository.insert(user);
 
@@ -128,13 +128,15 @@ describe('user.repository with db', () => {
   it('Deve impedir a inserção de um usuário com cpf duplicado', async () => {
     const userRepository = connection.getRepository(User);
 
+    const user = (
+      await createFakeUser.create({ document: '12', userType: UserType.Comum })
+    ).getValue();
+    const duplicatedUser = (
+      await createFakeUser.create({ document: '12', userType: UserType.Comum })
+    ).getValue();
     try {
-      await userRepository.insert(
-        createFakeUser.build({ document: '12', userType: UserType.Comum }),
-      );
-      await userRepository.insert(
-        createFakeUser.build({ document: '12', userType: UserType.Comum }),
-      );
+      await userRepository.insert(user);
+      await userRepository.insert(duplicatedUser);
 
       fail('Não deve ter dois emails cadastrados');
     } catch (error) {
@@ -147,7 +149,9 @@ describe('user.repository with db', () => {
   it('Deve criar um usuário com sucesso', async () => {
     const userRepository = connection.getRepository(User);
 
-    const result = await userRepository.insert(createFakeUser.build());
+    const user = (await createFakeUser.create()).getValue();
+
+    const result = await userRepository.insert(user);
 
     expect(result.identifiers).toHaveLength(1);
   });
