@@ -7,11 +7,8 @@ import { UsersModule } from './users/users.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      type: 'mongodb',
-      host: 'localhost',
-      port: 27017,
-      dropSchema: true,
-      database: 'pic',
+      type: 'better-sqlite3',
+      database: ':memory:',
       autoLoadEntities: true,
       synchronize: true,
     }),

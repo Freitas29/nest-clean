@@ -12,7 +12,7 @@ export class Transfers {
   sender: User;
   amount: number;
 
-  constructor(props: TransferData) {
+  private constructor(props: TransferData) {
     this.receiver = props.receiver;
     this.sender = props.sender;
     this.amount = props.amount;

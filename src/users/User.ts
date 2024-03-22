@@ -36,13 +36,13 @@ export class User {
   @Column({ unique: true, type: 'text', nullable: false })
   email: string;
 
-  @Column({ enum: UserType })
+  @Column({ enum: UserType, type: 'text' })
   userType: UserType;
 
   @Column({ type: 'decimal', default: 0 })
   amount: number;
 
-  constructor(props: UserData, id?: string) {
+  private constructor(props: UserData, id?: string) {
     Object.assign(this, props);
     this.id = id ?? Math.random().toString();
   }

@@ -1,7 +1,8 @@
 import { IValidator } from './Validator';
 
 export class CPFValidator implements IValidator {
-  isValid(cpf: string): boolean {
+  isValid(value: string | null): boolean {
+    let cpf = value || '';
     cpf = cpf.replace(/[^\d]/g, ''); // Remove caracteres não numéricos
 
     if (cpf.length !== 11) {
