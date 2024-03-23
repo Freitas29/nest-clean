@@ -1,7 +1,7 @@
 import Result from '../common/Result';
-import { User } from 'src/users/User';
+import { User } from '../users/User';
 
 export interface IUserRepository {
   create(input: User): Promise<Result<User>>;
-  findById(email: string): Promise<Result<User>>;
+  findById(id: string): Promise<Result<User>>;
 }
