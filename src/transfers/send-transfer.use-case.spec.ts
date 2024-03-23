@@ -1,26 +1,10 @@
 import { IUserRepository } from 'src/users/UserRepository';
-import { User, UserType } from '../users/User';
+import { UserType } from '../users/User';
 import { createFakeUser } from '../users/mocks/UserMock';
-import { Transfers } from './Transfers';
 import { SendTransferUseCase } from './send-transfer.use-case';
-import Result from '../common/Result';
+import { UserRepositoryFake } from '../users/user.repository.fake';
 
 describe('send-transfer-use-case', () => {
-  let usersMocked: User[] = [];
-
-  const userRepo: IUserRepository = {
-    async create(e) {
-      return Result.ok(e);
-    },
-    async findById(id) {
-      return Result.ok(usersMocked.find((user) => user.id === id));
-    },
-  };
-
-  beforeEach(() => {
-    usersMocked = [];
-  });
-
   it('Deve realizar uma transferência para o lojista', async () => {
     const users = [
       (
@@ -37,9 +21,11 @@ describe('send-transfer-use-case', () => {
       ).getValue(),
     ];
 
-    usersMocked = users;
+    const useRepo: IUserRepository = new UserRepositoryFake(users);
 
-    const transferUseCase = new SendTransferUseCase(userRepo);
+    const spyUpdate = jest.spyOn(useRepo, 'update');
+
+    const transferUseCase = new SendTransferUseCase(useRepo);
 
     const transfer = await transferUseCase.sendTranfer({
       amount: 10,
@@ -53,29 +39,75 @@ describe('send-transfer-use-case', () => {
 
     expect(result.sender.amount).toBe(90);
     expect(result.receiver.amount).toBe(30);
+    expect(spyUpdate).toHaveBeenCalled();
+    expect(spyUpdate).toHaveBeenCalledTimes(2);
   });
 
-  it.skip('Não deve realizar uma transferência de lojista para outro', async () => {
-    const sender = (
-      await createFakeUser.create({
-        amount: 45,
-        userType: UserType.Lojista,
-      })
-    ).getValue();
+  it('Não deve realizar uma transferência de lojista para outro', async () => {
+    const users = [
+      (
+        await createFakeUser.create({
+          userType: UserType.Lojista,
+          amount: 100,
+        })
+      ).getValue(),
+      (
+        await createFakeUser.create({
+          userType: UserType.Lojista,
+          amount: 20,
+        })
+      ).getValue(),
+    ];
 
-    const receiver = (
-      await createFakeUser.create({ amount: 10, userType: UserType.Lojista })
-    ).getValue();
+    const useRepo: IUserRepository = new UserRepositoryFake(users);
 
-    const transfer = Transfers.execute({
-      amount: 20,
-      receiver,
-      sender: sender,
+    const spyUpdate = jest.spyOn(useRepo, 'update');
+
+    const transferUseCase = new SendTransferUseCase(useRepo);
+
+    const transfer = await transferUseCase.sendTranfer({
+      amount: 10,
+      receiver: users[1].id,
+      sender: users[0].id,
     });
 
-    expect(transfer.isSuccess).toBeFalsy();
-    expect(transfer.error).toBe('Lojistas não podem realizar transferência');
-    expect(sender.amount).toBe(45);
-    expect(receiver.amount).toBe(10);
+    expect(transfer.isFailure).toBeTruthy();
+
+    expect(spyUpdate).not.toHaveBeenCalled();
+  });
+
+  it('Não deve realizar uma transferência quando não tem saldo', async () => {
+    const users = [
+      (
+        await createFakeUser.create({
+          userType: UserType.Comum,
+          amount: 0,
+        })
+      ).getValue(),
+      (
+        await createFakeUser.create({
+          userType: UserType.Lojista,
+          amount: 20,
+        })
+      ).getValue(),
+    ];
+
+    const useRepo: IUserRepository = new UserRepositoryFake(users);
+
+    const spyUpdate = jest.spyOn(useRepo, 'update');
+
+    const transferUseCase = new SendTransferUseCase(useRepo);
+
+    const transfer = await transferUseCase.sendTranfer({
+      amount: 10,
+      receiver: users[1].id,
+      sender: users[0].id,
+    });
+
+    expect(transfer.isFailure).toBeTruthy();
+
+    expect(transfer.error).toBe('Saldo insuficiente');
+
+    expect(spyUpdate).not.toHaveBeenCalled();
   });
 });

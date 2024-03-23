@@ -5,6 +5,8 @@ import { IUserRepository } from '../users/UserRepository';
 import { Transfers } from './Transfers';
 
 export class SendTransferUseCase implements ISendTransferUseCase {
+  private DEFAULT_ERROR = 'Não foi possível realizar a transferência';
+
   constructor(
     @Inject('IUserRepository') private readonly userRepo: IUserRepository,
   ) {}
@@ -16,7 +18,7 @@ export class SendTransferUseCase implements ISendTransferUseCase {
     ]);
 
     if (sender.isFailure || receiver.isFailure)
-      return Result.fail('Não foi possível realizar a transferência');
+      return Result.fail(this.DEFAULT_ERROR);
 
     const tranfer = Transfers.execute({
       amount: input.amount,
@@ -25,6 +27,14 @@ export class SendTransferUseCase implements ISendTransferUseCase {
     });
 
     if (tranfer.isFailure) return Result.fail(tranfer.error);
+
+    const [senderUpdated, userUpdated] = await Promise.all([
+      this.userRepo.update(sender.getValue()),
+      this.userRepo.update(sender.getValue()),
+    ]);
+
+    if (senderUpdated.isFailure || userUpdated.isFailure)
+      return Result.fail(this.DEFAULT_ERROR);
 
     return Result.ok(tranfer.getValue());
   }
