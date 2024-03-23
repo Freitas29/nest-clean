@@ -4,6 +4,7 @@ import { faker } from '@faker-js/faker';
 import { IUserRepository } from './UserRepository';
 import Result from '../common/Result';
 import { UserType } from './User';
+import { UserRepositoryFake } from './user.repository.fake';
 
 jest.mock('./user.repository');
 
@@ -12,14 +13,7 @@ describe('CreateUserUseCase', () => {
   const CNPJ_VALIDO = '80006940000127';
   const CPF_VALIDO = '23671568089';
 
-  const mockedUserRepository: IUserRepository = {
-    async create() {
-      return Promise.resolve(Result.ok());
-    },
-    async findById() {
-      return Promise.resolve(Result.ok());
-    },
-  };
+  const mockedUserRepository: IUserRepository = new UserRepositoryFake();
 
   beforeEach(async () => {
     jest.clearAllMocks();
@@ -46,7 +40,7 @@ describe('CreateUserUseCase', () => {
       userType: UserType.Comum,
     });
 
-    await expect(Promise.resolve(response)).resolves.toEqual({
+    await expect(Promise.resolve(response)).resolves.toMatchObject({
       isFailure: false,
       isSuccess: true,
       error: null,

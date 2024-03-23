@@ -12,6 +12,19 @@ export class UserRepository implements IUserRepository {
     private readonly database: Repository<User>,
   ) {}
 
+  async update(input: Partial<User>): Promise<Result<boolean>> {
+    try {
+      const result = await this.database.update(input.id, input);
+
+      if (result.affected === 0)
+        return Result.fail('Não foi possível atualizar');
+
+      return Result.ok(true);
+    } catch (e) {
+      return Result.fail('Ocorreu um erro ao atualizar o usuário');
+    }
+  }
+
   async create(input: User): Promise<Result<User>> {
     try {
       const user = await this.database.save(input);

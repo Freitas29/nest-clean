@@ -11,7 +11,7 @@ export class UserRepositoryFake implements IUserRepository {
     this.dbMemory = db;
   }
 
-  async update(input: Partial<User>): Promise<Result<User>> {
+  async update(input: Partial<User>): Promise<Result<boolean>> {
     const result = this.dbMemory.map((user) => {
       if (user.id !== input.id) return user;
 
@@ -20,7 +20,7 @@ export class UserRepositoryFake implements IUserRepository {
 
     this.dbMemory = result;
 
-    return Result.ok((await this.findById(input.id)).getValue());
+    return Result.ok(true);
   }
 
   async create(input: User): Promise<Result<User>> {
