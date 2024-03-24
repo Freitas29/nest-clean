@@ -19,6 +19,7 @@ export class CreateUserUseCase implements ICreateUserUseCase {
       email: input.email,
       nome: input.name,
       userType: input.userType,
+      amount: input.amount,
     });
 
     if (user.isFailure) return Result.fail(user.error);

@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsEnum } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsEnum, IsNumber } from 'class-validator';
 import { UserType } from './User';
 
 export class CreateUserDTO {
@@ -16,4 +16,8 @@ export class CreateUserDTO {
     message: 'Tipo de usuário inválido',
   })
   userType: UserType;
+
+  @IsNotEmpty()
+  @IsNumber()
+  amount: number;
 }

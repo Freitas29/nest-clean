@@ -19,6 +19,8 @@ export class Transfers {
   }
 
   static execute(props: TransferData): Result<Transfers> {
+    if (props.amount === 0) return Result.fail('Valor deve ser maior que zero');
+
     if (props.sender.userType === UserType.Lojista) {
       return Result.fail('Lojistas não podem realizar transferência');
     }

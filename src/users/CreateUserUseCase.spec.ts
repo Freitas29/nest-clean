@@ -2,7 +2,6 @@ import { Test } from '@nestjs/testing';
 import { CreateUserUseCase } from './create-user.use-case';
 import { faker } from '@faker-js/faker';
 import { IUserRepository } from './UserRepository';
-import Result from '../common/Result';
 import { UserType } from './User';
 import { UserRepositoryFake } from './user.repository.fake';
 

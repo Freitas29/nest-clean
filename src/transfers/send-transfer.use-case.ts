@@ -1,9 +1,10 @@
 import Result from '../common/Result';
 import { ISendTransferUseCase, SendTranferInput } from './SendTransfer';
-import { Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { IUserRepository } from '../users/UserRepository';
 import { Transfers } from './Transfers';
 
+@Injectable()
 export class SendTransferUseCase implements ISendTransferUseCase {
   private DEFAULT_ERROR = 'Não foi possível realizar a transferência';
 
