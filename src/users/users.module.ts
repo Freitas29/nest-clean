@@ -4,6 +4,7 @@ import { User } from './User';
 import { UserRepository } from './user.repository';
 import { CreateUserUseCase } from './create-user.use-case';
 import { UsersControler } from './users.controler';
+import { FindUserUseCase } from './find-user.use-case';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User])],
@@ -11,6 +12,7 @@ import { UsersControler } from './users.controler';
   controllers: [UsersControler],
   providers: [
     CreateUserUseCase,
+    FindUserUseCase,
     UserRepository,
     {
       provide: 'IUserRepository',

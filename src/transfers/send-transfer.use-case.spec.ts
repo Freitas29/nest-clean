@@ -41,6 +41,16 @@ describe('send-transfer-use-case', () => {
     expect(result.receiver.amount).toBe(30);
     expect(spyUpdate).toHaveBeenCalled();
     expect(spyUpdate).toHaveBeenCalledTimes(2);
+
+    expect(spyUpdate).toHaveBeenNthCalledWith(1, {
+      ...users[0],
+      amount: 90,
+    });
+
+    expect(spyUpdate).toHaveBeenNthCalledWith(2, {
+      ...users[1],
+      amount: 30,
+    });
   });
 
   it('Não deve realizar uma transferência de lojista para outro', async () => {

@@ -31,7 +31,7 @@ export class SendTransferUseCase implements ISendTransferUseCase {
 
     const [senderUpdated, userUpdated] = await Promise.all([
       this.userRepo.update(sender.getValue()),
-      this.userRepo.update(sender.getValue()),
+      this.userRepo.update(receiver.getValue()),
     ]);
 
     if (senderUpdated.isFailure || userUpdated.isFailure)

@@ -30,6 +30,10 @@ export class UserRepositoryFake implements IUserRepository {
   }
 
   async findById(id: string): Promise<Result<User>> {
-    return Result.ok(this.dbMemory.find((user) => user.id === id));
+    const user = this.dbMemory.find((user) => user.id === id);
+
+    if (!user) return Result.fail('Não foi possível encontrar');
+
+    return Result.ok(user);
   }
 }
