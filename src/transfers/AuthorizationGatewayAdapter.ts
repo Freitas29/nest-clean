@@ -1,3 +1,4 @@
+import { Inject } from '@nestjs/common';
 import { HttpClient } from '../common/ports/Http';
 import {
   IAuthorizationTranferGateway,
@@ -7,7 +8,7 @@ import {
 export class AuthorizationGatewayAdapter
   implements IAuthorizationTranferGateway
 {
-  constructor(private readonly http: HttpClient) {}
+  constructor(@Inject('httpClient') private readonly http: HttpClient) {}
 
   async authorize(): Promise<boolean> {
     const response = await this.http.get<IAutorizationTransferResponse>({

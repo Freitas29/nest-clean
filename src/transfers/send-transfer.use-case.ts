@@ -12,6 +12,7 @@ export class SendTransferUseCase implements ISendTransferUseCase {
   constructor(
     @Inject('IUserRepository') private readonly userRepo: IUserRepository,
     private readonly dataSource: DataSource,
+    @Inject('IAuthorizationTranferGateway')
     private readonly authorizationGateway: IAuthorizationTranferGateway,
   ) {}
 
