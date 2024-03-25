@@ -1,25 +1,40 @@
 import Result from '../common/Result';
 import { ISendTransferUseCase, SendTranferInput } from './SendTransfer';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import { IUserRepository } from '../users/UserRepository';
 import { Transfers } from './Transfers';
+import { DataSource, QueryRunner } from 'typeorm';
+import { IAuthorizationTranferGateway } from './AuthorizationGateway';
 
-@Injectable()
 export class SendTransferUseCase implements ISendTransferUseCase {
   private DEFAULT_ERROR = 'Não foi possível realizar a transferência';
 
   constructor(
     @Inject('IUserRepository') private readonly userRepo: IUserRepository,
+    private readonly dataSource: DataSource,
+    private readonly authorizationGateway: IAuthorizationTranferGateway,
   ) {}
 
+  private handleError(query: QueryRunner, error?: string): Result<Transfers> {
+    query.rollbackTransaction();
+
+    return Result.fail(error || this.DEFAULT_ERROR);
+  }
+
   async sendTranfer(input: SendTranferInput): Promise<Result<Transfers>> {
+    const queryRunner = this.dataSource.createQueryRunner();
+
+    await queryRunner.connect();
+
+    await queryRunner.startTransaction();
+
     const [sender, receiver] = await Promise.all([
       this.userRepo.findById(input.sender),
       this.userRepo.findById(input.receiver),
     ]);
 
     if (sender.isFailure || receiver.isFailure)
-      return Result.fail(this.DEFAULT_ERROR);
+      return this.handleError(queryRunner);
 
     const tranfer = Transfers.execute({
       amount: input.amount,
@@ -27,7 +42,7 @@ export class SendTransferUseCase implements ISendTransferUseCase {
       sender: sender.getValue(),
     });
 
-    if (tranfer.isFailure) return Result.fail(tranfer.error);
+    if (tranfer.isFailure) return this.handleError(queryRunner, tranfer.error);
 
     const [senderUpdated, userUpdated] = await Promise.all([
       this.userRepo.update(sender.getValue()),
@@ -35,8 +50,15 @@ export class SendTransferUseCase implements ISendTransferUseCase {
     ]);
 
     if (senderUpdated.isFailure || userUpdated.isFailure)
-      return Result.fail(this.DEFAULT_ERROR);
+      return this.handleError(queryRunner);
 
+    const isAuthorized = await this.authorizationGateway.authorize();
+
+    if (!isAuthorized)
+      return this.handleError(queryRunner, 'Transferência não autorizada');
+
+    await queryRunner.commitTransaction();
+    await queryRunner.release();
     return Result.ok(tranfer.getValue());
   }
 }
